@@ -3,9 +3,10 @@
     <section class="toggle-group">
       <button
         class="button cursor-pointer"
-        :class="['button--primary' ? activeFilter === 'filter' : '']"
+        :class="[filter === activeFilter ? 'button--primary' : '']"
         v-for="(filter, i) in filters"
         :key="i"
+        @click="sendFilter(filter)"
       >
         {{ filter }}
       </button>
@@ -17,8 +18,12 @@ import AppTodoList from "@/components/AppTodoList.vue";
 import type { Filters } from "@/types/todo";
 import type { ref } from "vue";
 
-defineProps(['activeFilter'])
+const { activeFilter } = defineProps(["activeFilter"]);
 const filters = ["All", "Active", "Done"];
-const emit = defineEmits(["onClickDone", "onClickDelete"]);
+
+const emit = defineEmits(["sendFilter"]);
+function sendFilter(filter) {
+  return emit("sendFilter", filter);
+}
 </script>
 <style lang=""></style>

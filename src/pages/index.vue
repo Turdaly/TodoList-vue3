@@ -1,7 +1,7 @@
 <template>
   <section>
     <AppHeader />
-    <AppFilters :activeFilter="activeFilter"/>
+    <AppFilters :activeFilter="activeFilter" @sendFilter="setFilter" />
     <AppTodoList
       :todos="filterTodos"
       @onClickDone="onClickDone"
@@ -18,7 +18,6 @@ import AppFilters from "@/components/AppFilters.vue";
 import AppTodoList from "@/components/AppTodoList.vue";
 import AppFooter from "@/components/AppFooter.vue";
 import AppAdd from "@/components/AppAdd.vue";
-import type { log } from "console";
 
 import type { Todo, Filters } from "@/types/todo";
 
@@ -33,17 +32,18 @@ const todos = ref<Todo[]>([
 const activeFilter = ref<Filters>("All");
 
 const filterTodos = computed(() => {
-  switch(activeFilter.value) {
+  console.log(todos.value);
+  switch (activeFilter.value) {
     case "All":
-      return todos.value
+      return todos.value;
     case "Active":
-      return activeTodos()
+      return activeTodos();
     case "Done":
-      return doneTodos()
+      return doneTodos();
     default:
-      return null
+      return null;
   }
-})
+});
 
 function onClickDone(id: Number) {
   const targetTodoIndex = todos.value.findIndex((todo) => todo.id === id);
@@ -59,15 +59,21 @@ function onClickDelete(id: Number) {
 }
 
 function addTask(text) {
-  const todoItem = { id: Math.random() * 100, title: text.value };
+  const todoItem: Todo = { id: Math.random() * 100, title: text.value };
   console.log(todoItem);
   todos.value.push(todoItem);
 }
 
 function activeTodos() {
-  return todos.value = todos.value.filter(todos => todos.completed)
+  let todoItem = []
+  return (todoItem = todos.value.filter((todos) => !todos.completed));
 }
 function doneTodos() {
-  return todos.value = todos.value.filter(todos => todos.completed)
+  let todoItem = []
+  return (todoItem = todos.value.filter((todos) => todos.completed));
+}
+
+function setFilter(filter: Filters) {
+  activeFilter.value = filter;
 }
 </script>
