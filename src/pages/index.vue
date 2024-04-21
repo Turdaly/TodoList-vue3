@@ -11,7 +11,6 @@
     />
     <AppAdd @addTask="onAddTodo"/>
     <AppFooter :ldone="doneTodos().length" :lactive="activeTodos().length" />
-    {{ filterTodos }}
   </section>
 </template>
 
