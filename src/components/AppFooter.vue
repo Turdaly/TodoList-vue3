@@ -1,7 +1,11 @@
 <template lang="">
-  <footer class="app-footer">2 more to do, 1 done</footer>
+  <footer class="app-footer">{{ lactive }} more to do, {{ ldone }} done</footer>
 </template>
-<script>
-export default {};
+
+<script setup lang="ts">
+defineProps({
+  ldone: Number,
+  lactive: Number,
+});
+
 </script>
-<style lang=""></style>

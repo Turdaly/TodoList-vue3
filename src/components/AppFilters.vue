@@ -22,7 +22,7 @@ const { activeFilter } = defineProps(["activeFilter"]);
 const filters = ["All", "Active", "Done"];
 
 const emit = defineEmits(["sendFilter"]);
-function sendFilter(filter) {
+function sendFilter(filter:Filters) {
   return emit("sendFilter", filter);
 }
 </script>

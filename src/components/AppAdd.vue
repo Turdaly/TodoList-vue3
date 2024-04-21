@@ -19,19 +19,18 @@
   </section>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, type ModelRef } from "vue";
 
-const todoText = defineModel({ type: String });
+const todoText = ref<String>("")
 const isFormVisible = ref<Boolean>(false);
-
 const emit = defineEmits(["addTask"]);
-
 function addTask() {
-  if (todoText.value.length > 0) {emit("addTask", todoText)};
-  todoText.value = ''
+  if (todoText.value.length > 0) {
+    emit("addTask", todoText.value);
+  }
+  todoText.value = "";
 }
 function showForm() {
-  console.log(isFormVisible.value);
   isFormVisible.value = !isFormVisible.value;
 }
 </script>

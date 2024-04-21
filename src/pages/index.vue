@@ -1,5 +1,7 @@
 <template>
   <section>
+    <auth class="ml-20 mb-10" />
+    <login class="ml-20 mb-10" />
     <AppHeader />
     <AppFilters :activeFilter="activeFilter" @sendFilter="setFilter" />
     <AppTodoList
@@ -7,45 +9,89 @@
       @onClickDone="onClickDone"
       @onClickDelete="onClickDelete"
     />
-    <AppAdd @addTask="addTask" />
-    <AppFooter />
+    <AppAdd @addTask="onAddTodo"/>
+    <AppFooter :ldone="doneTodos().length" :lactive="activeTodos().length" />
+    {{ filterTodos }}
   </section>
 </template>
 
 <script setup lang="ts">
+import axios from "axios";
+
 import AppHeader from "@/components/AppHeader.vue";
 import AppFilters from "@/components/AppFilters.vue";
 import AppTodoList from "@/components/AppTodoList.vue";
 import AppFooter from "@/components/AppFooter.vue";
 import AppAdd from "@/components/AppAdd.vue";
+import auth from "@/pages/auth.vue";
+import login from "@/pages/login.vue";
 
+import { ref, computed, onMounted } from "vue";
+
+// Types
 import type { Todo, Filters } from "@/types/todo";
 
-import { ref, computed } from "vue";
-
-const todos = ref<Todo[]>([
-  { id: 75, title: "learn Html", completed: true },
-  { id: 456, title: "learn Js", completed: false },
-  { id: 47, title: "learn Vue", completed: false },
-]);
-
+// State
+const todos = ref<Todo[]>([]);
 const activeFilter = ref<Filters>("All");
 
+// Get Todos
+const fetchTodos = async () => {
+  try {
+    const { data } = await axios.get(
+      "https://660471452ca9478ea17dfeb7.mockapi.io/TodoList/todos"
+    );
+    todos.value = data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const onAddTodo = async (text:string) => {
+  try {
+    await addTodos(text)
+    await fetchTodos()
+  }catch(err){
+    console.log(err)
+  }
+}
+// Add Todos
+const addTodos = async (text: string) => {
+  try {
+    await axios.post("https://660471452ca9478ea17dfeb7.mockapi.io/TodoList/todos", {
+      title: text,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
+// Delete Todos
+const deleteTodos = async (id: number) => {
+  try {
+    console.log("Id = ",id)
+    await axios.delete(`https://660471452ca9478ea17dfeb7.mockapi.io/TodoList/todos/${id}`);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const filterTodos = computed(() => {
-  console.log(todos.value);
   switch (activeFilter.value) {
     case "All":
       return todos.value;
     case "Active":
-      return activeTodos();
+      return todos.value.filter((todos) => !todos.completed);;
     case "Done":
-      return doneTodos();
+      return todos.value.filter((todos) => todos.completed);
     default:
       return null;
   }
 });
 
-function onClickDone(id: Number) {
+// Methods
+function onClickDone(id: number) {
   const targetTodoIndex = todos.value.findIndex((todo) => todo.id === id);
   if (targetTodoIndex !== -1) {
     todos.value[targetTodoIndex].completed =
@@ -53,27 +99,29 @@ function onClickDone(id: Number) {
   }
 }
 
-function onClickDelete(id: Number) {
+function onClickDelete(id: number) {
   const targetTodoIndex = todos.value.findIndex((todo) => todo.id === id);
   todos.value.splice(targetTodoIndex, 1);
-}
-
-function addTask(text) {
-  const todoItem: Todo = { id: Math.random() * 100, title: text.value };
-  console.log(todoItem);
-  todos.value.push(todoItem);
-}
-
-function activeTodos() {
-  let todoItem = []
-  return (todoItem = todos.value.filter((todos) => !todos.completed));
-}
-function doneTodos() {
-  let todoItem = []
-  return (todoItem = todos.value.filter((todos) => todos.completed));
+  deleteTodos(id)
 }
 
 function setFilter(filter: Filters) {
   activeFilter.value = filter;
 }
+
+function activeTodos() {
+  return  todos.value.filter((todos) => !todos.completed);
+}
+function doneTodos() {
+  return todos.value.filter((todos) => todos.completed);
+}
+
+// function addTask(text) {
+//   const todoItem: Todo = { id: Math.random() * 100, title: text.value };
+//   todos.value.push(todoItem);
+// }
+
+onMounted(async () => {
+  await fetchTodos();
+});
 </script>
