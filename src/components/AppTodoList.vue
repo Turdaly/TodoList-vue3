@@ -11,7 +11,6 @@ const emit = defineEmits(['onClickDone', 'onClickDelete'])
     <AppTodoItem
       v-for="todo in todos"
       :key="todo.id"
-      :id="todo.id"
       :title="todo.title"
       :completed="todo.completed"
       :onClickDone="() => emit('onClickDone', todo.id)"

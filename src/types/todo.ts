@@ -1,7 +1,8 @@
 export interface Todo {
-  id: Number,
-  title: String,
-  completed: Boolean
+  id: number,
+  title: string,
+  completed: boolean
+  owner: string
 }
 
 export type Filters = "All" | "Active" | "Done";

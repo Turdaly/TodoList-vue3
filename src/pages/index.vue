@@ -1,7 +1,6 @@
 <template>
   <section>
-    <auth class="ml-20 mb-10" />
-    <login class="ml-20 mb-10" />
+    <auth class="ml-20 mb-10" @handleLoginSuccess="handleResponse"/>
     <AppHeader />
     <AppFilters :activeFilter="activeFilter" @sendFilter="setFilter" />
     <AppTodoList
@@ -10,7 +9,7 @@
       @onClickDelete="onClickDelete"
     />
     <AppAdd @addTask="onAddTodo"/>
-    <AppFooter :ldone="doneTodos().length" :lactive="activeTodos().length" />
+    <AppFooter :todos="todos" />
   </section>
 </template>
 
@@ -23,23 +22,48 @@ import AppTodoList from "@/components/AppTodoList.vue";
 import AppFooter from "@/components/AppFooter.vue";
 import AppAdd from "@/components/AppAdd.vue";
 import auth from "@/pages/auth.vue";
-import login from "@/pages/login.vue";
 
 import { ref, computed, onMounted } from "vue";
 
 // Types
 import type { Todo, Filters } from "@/types/todo";
 
+import { GoogleSignInButton, type CredentialResponse, } from "vue3-google-signin"
+import { jwtDecode } from "jwt-decode";
+import type { JwtPayload } from "@/types/jwt"
+
 // State
+
+const changeToken = (access_token: CredentialResponse) => {
+  let token: string = "";
+  token = access_token.credential
+  const decoded = jwtDecode<JwtPayload>(token);
+
+  const decodedHeader = jwtDecode(token, { header: true });
+  return decoded.email
+}
+
 const todos = ref<Todo[]>([]);
 const activeFilter = ref<Filters>("All");
+const response = ref<string | null>(null)
+
+
+const handleResponse = async (access_token: CredentialResponse) => {
+  response.value = changeToken(access_token)
+  try {
+    await fetchTodos()
+  }catch(err){
+    console.log(err)
+  }
+}
 
 // Get Todos
 const fetchTodos = async () => {
   try {
-    const { data } = await axios.get(
+    let { data }: {data: Todo[]} = await axios.get(
       "https://660471452ca9478ea17dfeb7.mockapi.io/TodoList/todos"
     );
+    data = data.filter(todo => todo["owner"] === response.value)
     todos.value = data;
   } catch (err) {
     console.log(err);
@@ -59,17 +83,16 @@ const addTodos = async (text: string) => {
   try {
     await axios.post("https://660471452ca9478ea17dfeb7.mockapi.io/TodoList/todos", {
       title: text,
+      owner: response.value
     });
   } catch (err) {
     console.log(err);
   }
 };
 
-
 // Delete Todos
 const deleteTodos = async (id: number) => {
   try {
-    console.log("Id = ",id)
     await axios.delete(`https://660471452ca9478ea17dfeb7.mockapi.io/TodoList/todos/${id}`);
   } catch (err) {
     console.log(err);
@@ -108,17 +131,7 @@ function setFilter(filter: Filters) {
   activeFilter.value = filter;
 }
 
-function activeTodos() {
-  return  todos.value.filter((todos) => !todos.completed);
-}
-function doneTodos() {
-  return todos.value.filter((todos) => todos.completed);
-}
 
-// function addTask(text) {
-//   const todoItem: Todo = { id: Math.random() * 100, title: text.value };
-//   todos.value.push(todoItem);
-// }
 
 onMounted(async () => {
   await fetchTodos();

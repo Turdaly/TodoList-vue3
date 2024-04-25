@@ -4,9 +4,11 @@ import {
   type CredentialResponse,
 } from "vue3-google-signin";
 
+const emit = defineEmits(["handleLoginSuccess"])
 // handle success event
 const handleLoginSuccess = (response: CredentialResponse) => {
   console.log("Access Token", response);
+  emit("handleLoginSuccess", response)
 };
 
 // handle an error event
