@@ -4,13 +4,17 @@
     <Navbar :account="accountStore.account"/>
     <AppHeader />
     <AppFilters :activeFilter="activeFilter" @sendFilter="setFilter" />
-    <AppTodoItem
+    <transition-group tag="ul" name="list" class="mt-12">
+
+      <AppTodoItem
       v-for="todo in filterTodos"
       :key="todo.id"
       :todo="todo"
+      class="mt-4"
       @onClickDone="onClickDone"
       @onClickDelete="deleteTodos"
     />
+    </transition-group>
     <AppAdd @addTask="onAddTodo"/>
     <AppFooter :todos="todos" />
   </section>
@@ -139,3 +143,22 @@ onMounted(async () => {
   await fetchTodos();
 });
 </script>
+
+<style scoped>
+/* list transition */
+
+.list-leave-to,
+.list-enter-from {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.list-leave-from,
+.list-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+.list-leave-active,
+.list-enter-active {
+  transition: all 0.4s ease;
+}
+</style>

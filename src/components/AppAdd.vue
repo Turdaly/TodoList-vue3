@@ -23,7 +23,7 @@
 import { ref } from "vue";
 
 const todoText = ref<string>("")
-const isFormVisible = ref<boolean>(false);
+const isFormVisible = ref<boolean>(true);
 
 const emit = defineEmits(["addTask"]);
 

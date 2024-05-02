@@ -9,7 +9,7 @@
     </div>
     <span class="todo-item__text">{{ todo?.title }}</span>
     <button class="todo-item__remove-button" @click="onClickDelete">
-      <i class="bi bi-trash3"></i>
+      <box-icon name='trash' color="#e30808"></box-icon>
     </button>
   </li>
 </template>

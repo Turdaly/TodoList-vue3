@@ -2,10 +2,10 @@
   <aside class="app-filters">
     <section class="toggle-group">
       <button
-        class="button cursor-pointer"
-        :class="[filter === activeFilter ? 'button--primary' : '']"
         v-for="(filter, i) in filters"
         :key="i"
+        class="button cursor-pointer"
+        :class="[filter === activeFilter.activeFilter ? 'button--primary' : '']"
         @click="sendFilter(filter)"
       >
         {{ filter }}
@@ -18,7 +18,10 @@
 import { Filters } from "@/types/todo";
 
 const activeFilter = defineProps({
-  activeFilter: String as () => Filters
+  activeFilter: {
+    type: String as () => Filters,
+    default: Filters.ALL
+  }
 });
 const filters: Filters[] = [Filters.ALL, Filters.ACTIVE, Filters.DONE];
 

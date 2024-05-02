@@ -17,10 +17,9 @@
               </a>
 
               <div class="nav__list">
-                  <div class="nav__items">
-                      <h3 class="nav__subtitle mt-8">Profile</h3>
+                  <div class="nav__items mt-12">
                       <a href="#" class="nav__link">
-                          <box-icon name='home-alt' class=""></box-icon>
+                          <box-icon name='home-alt' ></box-icon>
                           <span class="nav__name ml-3">Home</span>
                       </a>
                   </div>
