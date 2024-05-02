@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import {
-  GoogleSignInButton,
-  type CredentialResponse,
-} from "vue3-google-signin";
+import type { CredentialResponse } from "vue3-google-signin";
 
 const emit = defineEmits(["handleLoginSuccess"])
 // handle success event

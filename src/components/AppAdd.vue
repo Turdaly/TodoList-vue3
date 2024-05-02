@@ -1,11 +1,11 @@
-<template lang="">
+<template>
   <section class="add-todo">
     <button
       v-if="!isFormVisible"
       class="add-todo__show-form-button"
       @click="showForm"
     >
-      <i class="bi bi-plus-lg"></i>
+    <box-icon name='plus' color="#dc2626"></box-icon>
     </button>
     <form v-else class="add-todo__form" @submit.prevent="default">
       <button class="close-button" type="button">
@@ -18,20 +18,23 @@
     </form>
   </section>
 </template>
-<script setup lang="ts">
-import { ref, type ModelRef } from "vue";
 
-const todoText = ref<String>("")
-const isFormVisible = ref<Boolean>(false);
+<script setup lang="ts">
+import { ref } from "vue";
+
+const todoText = ref<string>("")
+const isFormVisible = ref<boolean>(false);
+
 const emit = defineEmits(["addTask"]);
-function addTask() {
+
+const addTask = (): void => {
   if (todoText.value.length > 0) {
     emit("addTask", todoText.value);
   }
   todoText.value = "";
 }
-function showForm() {
+
+const showForm = (): void => {
   isFormVisible.value = !isFormVisible.value;
 }
 </script>
-<style lang=""></style>

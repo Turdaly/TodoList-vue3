@@ -5,4 +5,10 @@ export interface Todo {
   owner: string
 }
 
-export type Filters = "All" | "Active" | "Done";
+export type Filter = "All" | "Active" | "Done";
+
+export enum Filters {
+  ALL = "All",
+  ACTIVE = "Active",
+  DONE = "Done"
+}

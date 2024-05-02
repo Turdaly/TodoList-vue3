@@ -1,4 +1,4 @@
-<template lang="">
+<template>
   <aside class="app-filters">
     <section class="toggle-group">
       <button
@@ -13,17 +13,18 @@
     </section>
   </aside>
 </template>
-<script setup lang="ts">
-import AppTodoList from "@/components/AppTodoList.vue";
-import type { Filters } from "@/types/todo";
-import type { ref } from "vue";
 
-const { activeFilter } = defineProps(["activeFilter"]);
-const filters = ["All", "Active", "Done"];
+<script setup lang="ts">
+import { Filters } from "@/types/todo";
+
+const activeFilter = defineProps({
+  activeFilter: String as () => Filters
+});
+const filters: Filters[] = [Filters.ALL, Filters.ACTIVE, Filters.DONE];
 
 const emit = defineEmits(["sendFilter"]);
-function sendFilter(filter:Filters) {
-  return emit("sendFilter", filter);
+
+const sendFilter = (filter:Filters) => {
+  emit("sendFilter", filter);
 }
 </script>
-<style lang=""></style>

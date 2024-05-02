@@ -8,6 +8,11 @@ const router = createRouter({
       name: "home",
       component: () => import("../pages/index.vue"),
     },
+    {
+      path: "/:CatchAll(.*)",
+      name: "404",
+      component: () => import("../pages/notFound.vue")
+    }
   ],
 });
 

@@ -1,12 +1,11 @@
-<template lang="">
+<template>
   <footer class="app-footer">{{ activeTodos}} more to do, {{ doneTodos }} done</footer>
 </template>
 
 <script setup lang="ts">
 import type { Todo } from "@/types/todo"
-import { computed, toRef, toRefs } from "vue";
+import { computed } from "vue";
 
-// const { todos }: { todos: Todo[] } = defineProps();
 const props = defineProps({
   todos: Array as () => Todo[]
 })
